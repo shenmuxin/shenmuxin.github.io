@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Shen Mu Xin">
+
+
+
+
+
+<title>Reinforcement Learning with Code [Chapter 2. State Value and Bellman Equation] | Hexo</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Shenmuxin&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Shenmuxin&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Reinforcement Learning with Code [Chapter 2. State Value and Bellman Equation]</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Shen Mu Xin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">July 27, 2023&nbsp;&nbsp;10:36:11</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Reinforcement-Learning/">Reinforcement Learning</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>This note records how the author begin to learn RL. Both theoretical understanding and code practice are presented. Many material are referenced such as ZhaoShiyu’s <em>Mathematical Foundation of Reinforcement Learning</em>, .</p>
+<h2 id="Chapter-2-State-Value-and-Bellman-Equation"><a href="#Chapter-2-State-Value-and-Bellman-Equation" class="headerlink" title="Chapter 2. State Value and Bellman Equation"></a>Chapter 2. State Value and Bellman Equation</h2><h3 id="2-1-State-value"><a href="#2-1-State-value" class="headerlink" title="2.1 State value"></a>2.1 State value</h3><ul>
+<li><p><font color=red>State value</font> is defined as the mean of <font color=blue>all possible returns</font> starting from a state, which is actually the <font color=blue>expectation of return</font> from a specific state.</p>
+</li>
+<li><p>The mathematical definition is as follows:</p>
+<p>Note that the capital letters denote <em>random variables</em>, such as $S_t, S_{t+1}, A_t, R_{t+1}$. In particular, $S_t,S_{t+1}\in\mathcal{S},A_t\in\mathcal{A}(S_t)$ and $R_{t+1}\in\mathcal{R}(S_t,A_t)$. $G_t$ denote the random variable of return.</p>
+<p>Starting from $t$, we can obtain a state-action-reward trajectory:<br>$$<br>S_t \xrightarrow{A_t} S_{t+1},R_{t+1} \xrightarrow{A_{t+1}} S_{t+2},R_{t+2} \xrightarrow{A_{t+2}} S_{t+3},R_{t+3} \cdots<br>$$<br>The discounted return along the trajectory is<br>$$<br>G_t &#x3D; R_{t+1} + \gamma R_{t+2} + \gamma R_{t+3} + \cdots<br>$$<br>The state value is defined as:<br>$$<br>\textcolor{blue}{v_\pi(s)\triangleq \mathbb{E}[G_t|S_t&#x3D;s]}<br>$$<br>which means <font color=blue>start from state</font> $s$ can get the <font color=blue>expectation return</font> along the trajecotry generated by <font color=blue>policy $\pi$ </font>. </p>
+<p>$v_\pi(s)$ is also called <font color=blue>state-value funtion</font>.</p>
+</li>
+</ul>
+<h3 id="2-2-Bellman-Equation"><a href="#2-2-Bellman-Equation" class="headerlink" title="2.2 Bellman Equation"></a>2.2 Bellman Equation</h3><ul>
+<li><p>Bellman equation is a set of linear equations <font color=blue>describing the relationship among the values of all the states</font>.</p>
+<p>For example,<br><img src="https://img-blog.csdnimg.cn/b7e5d789b86c4fce87ffad0e7fcb3710.png" alt="state"></p>
+<p>Let $v_i$ denote the return obtained starting from $s_i$. The return starting from the four states in figure can be respectively calculated as </p>
+<p>$$<br>v_1 &#x3D; r_1 + \gamma r_2 + \gamma^2 r_3 + \cdots \<br>v_2 &#x3D; r_2 + \gamma r_3 + \gamma^2 r_4 + \cdots \<br>v_3 &#x3D; r_3 + \gamma r_4 + \gamma^2 r_1 + \cdots \<br>v_4 &#x3D; r_4 + \gamma r_1 + \gamma^2 r_2 + \cdots<br>$$</p>
+</li>
+</ul>
+<p> Using the idea of <em>bootstrapping</em>, we can rewrite it to</p>
+<p>$$<br>v_1 &#x3D; r_1 + \gamma (r_2 + \gamma r_3) + \cdots &#x3D; r_1 + \gamma v_2 \<br>v_2 &#x3D; r_2 + \gamma (r_3 + \gamma r_4) + \cdots &#x3D; r_2 + \gamma v_3 \<br>v_3 &#x3D; r_3 + \gamma (r_4 + \gamma r_1) + \cdots &#x3D; r_3 + \gamma v_4 \<br>v_4 &#x3D; r_4 + \gamma (r_1 + \gamma r_2) + \cdots &#x3D; r_4 + \gamma v_1<br>$$</p>
+<p>  Then rewrite it into matrix form</p>
+<p>  $$<br>  \underbrace{<br>      \begin{bmatrix}<br>          v_1 \<br>          v_2 \<br>          v_3 \<br>          v_4<br>      \end{bmatrix}<br>  }<em>{\textbf{v}} &#x3D;<br>  \underbrace{<br>      \begin{bmatrix}<br>          r_1 \<br>          r_2 \<br>          r_3 \<br>          r_4<br>      \end{bmatrix}<br>  }</em>{\textbf{r}} + \gamma<br>  \underbrace{<br>      \begin{bmatrix}<br>          0 &amp; 1 &amp; 0 &amp; 0 \<br>          0 &amp; 0 &amp; 1 &amp; 0 \<br>          0 &amp; 0 &amp; 0 &amp; 1 \<br>          1 &amp; 0 &amp; 0 &amp; 0 \<br>      \end{bmatrix}<br>  }<em>{\textbf{P}}<br>  \underbrace{<br>      \begin{bmatrix}<br>          v_1 \<br>          v_2 \<br>          v_3 \<br>          v_4<br>      \end{bmatrix}<br>  }</em>{\textbf{v}}<br>  $$</p>
+<p> The equation $\textbf{v}&#x3D;\textbf{r}+\gamma\textbf{P}\textbf{v}$ is called Bellman equation.</p>
+<ul>
+<li>Then we can derive Bellman equation from scratch as follows:</li>
+</ul>
+<p>Note that the discounted return random variable $G_t$ can be rewritten as </p>
+<p>$$<br>  \begin{aligned}<br>      G_t &amp; &#x3D;  R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots	\<br>      &amp; &#x3D;  R_{t+1} + \gamma(R_{t+2}+\gamma R_{t+3} + \cdots) \<br>      &amp; &#x3D;  R_{t+1} + \gamma G_{t+1}<br>  \end{aligned}<br> $$</p>
+<p> where $G_{t+1} &#x3D; R_{t+2} + \gamma R_{t+3} + \cdots$ . This equation establishes the relationship between $G_t$ and $G_{t+1}$. Then the state value can be rewritten as </p>
+<p>$$<br>  \begin{aligned}<br>      v_\pi(s) &amp; &#x3D;  \mathbb{E}[G_t|S_t&#x3D;s] \<br>      &amp; &#x3D;  \mathbb{E}[R_{t+1} + \gamma G_{t+1} | S_t&#x3D;s] \<br>      &amp; &#x3D;<br>      \underbrace{\mathbb{E}[R_{t+1}|S_t&#x3D;s]}<em>{\text{mean of immediate reward}} +<br>      \underbrace{\gamma \mathbb{E}[G</em>{t+1}|S_t&#x3D;s]}_{\text{mean of future reward}}<br>      \quad \text{(linear property of expectation)}<br>  \end{aligned}<br>$$</p>
+<p> The <font color = blue> mean of immediate reward</font> can be written as (use 2.3 conditional expectation)</p>
+<p>$$<br>  \begin{aligned}<br>      \mathbb{E}[R_{t+1}|S_t&#x3D;s] &amp; &#x3D;  \sum_a \pi(a|s) \mathbb{E}[R_{t+1} | S_t&#x3D;s,A_t&#x3D;a] \quad \text{(conditional expectation)}	\<br>      &amp; &#x3D;  \sum_a \pi(a|s) \sum_r p(r|s,a)r<br>  \end{aligned}<br>$$</p>
+<p>  The <font color = blue>mean of future reward</font> can be written as </p>
+<p>$$<br>  \begin{aligned}<br>      \gamma \mathbb{E}[G_{t+1}|S_t&#x3D;s] &amp; &#x3D;  \gamma \sum_a \pi(a|s) \mathbb{E}[G_{t+1}|S_t&#x3D;s, A_t&#x3D;a]	\quad \text{(conditional expectation)}	\<br>      &amp; &#x3D;  \gamma \sum_a \pi(a|s) \sum_{s^\prime} p(s^\prime|s,a) v_\pi(s^\prime)	\<br>  \end{aligned}<br>$$</p>
+<p>Then the state value can be rewritten as <font color=red>Bellman equation (BE)</font> form </p>
+<p>$$<br>\begin{aligned}<br>      v_\pi(s) &amp; &#x3D;  \mathbb{E}[G_t|S_t&#x3D;s] \<br>      &amp; &#x3D;  \mathbb{E}[R_{t+1}|S_t&#x3D;s] + \gamma \mathbb{E}[G_{t+1}|S_t&#x3D;s] 	\<br>      &amp; &#x3D;<br>      \underbrace{\sum_a \pi(a|s) \sum_r p(r|s,a)r}<em>{\text{mean of immediate reward}}<br>      +<br>      \underbrace{\gamma \sum_a \pi(a|s) \sum</em>{s^\prime} p(s^\prime|s,a) v_\pi(s^\prime)}<em>{\text{mean of future reward}}	\<br>      &amp; &#x3D;  \sum_a \pi(a|s) \Big[\sum_r p(r|s,a)r	+ \gamma\sum</em>{s^\prime} p(s^\prime|s,a) v_\pi(s^\prime)	\Big], \quad \text{for all } s\in\mathcal{S}<br> \end{aligned}<br>$$</p>
+<p>Next, we will introduce the matrix vector form of Bellman equation in terms of state value. Let $v_\pi&#x3D;[v_\pi(s_1),v_\pi(s_2),\cdots]^T\in\mathbb{R}^n$, $r_\pi&#x3D;[r_\pi(s_1),r_\pi(s_2),\cdots]^T\in\mathbb{R}^n$, and $P_\pi\in\mathbb{R}^{n\times n}$. Then we have the matrix-vector form of Bellman equation in terms of state value.</p>
+<p>$$<br>\textcolor{red}{v_\pi &#x3D; r + \gamma P_\pi v_\pi} \quad \text{(matrix-vector form)}<br>$$</p>
+<p>where</p>
+<p>$$<br>[r_\pi]<em>s \triangleq \sum_a \pi(a|s) \sum_r p(r|s,a)r \qquad<br>[P_\pi]</em>{s,s^\prime} &#x3D; \sum_a \pi(a|s) \sum_{s^\prime} p(s^\prime|s,a)<br>$$</p>
+<h3 id="2-3-Review-conditional-expectaion"><a href="#2-3-Review-conditional-expectaion" class="headerlink" title="2.3 Review conditional expectaion"></a>2.3 Review conditional expectaion</h3><ul>
+<li>The definition of conditional expectation is</li>
+</ul>
+<p>$$<br>\mathbb{E} &#x3D; [X|A&#x3D;a] &#x3D; \sum_{x}xp(x|a)<br>$$</p>
+<p>  Similar to the law of total probability, we have the law of total expectation:</p>
+<p>$$<br>\mathbb{E}[X] &#x3D; \sum_a p(a) \mathbb{E}[X|A&#x3D;a]<br>$$</p>
+<p>  <em>Proof</em></p>
+<p>  By definition of expectation the right hand side can be written as </p>
+<p>$$<br>\begin{aligned}<br>\mathbb{E}[X] &amp; &#x3D;  \sum_a p(a) \sum_x x p(x|a)	\<br>&amp; &#x3D;  \sum_x \sum_a p(x|a) p(a)  \quad \text{(law of total probability)}	\<br>&amp; &#x3D;  \sum_x p(x)	\<br>&amp; &#x3D;  \mathbb{E}[X]<br>\end{aligned}<br>$$</p>
+<h3 id="2-4-Solve-Bellman-Equation"><a href="#2-4-Solve-Bellman-Equation" class="headerlink" title="2.4 Solve Bellman Equation"></a>2.4 Solve Bellman Equation</h3><p>​	From the analysis above we are informed that Bellman equation is</p>
+<p>$$<br>\textcolor{blue}{v_\pi(s)&#x3D;\sum_a \pi(a|s) \Big[\sum_r p(r|s,a)r	+ \gamma\sum_{s^\prime} p(s^\prime|s,a) v_\pi(s^\prime)	\Big]}<br>$$</p>
+<p>We can rewrite it into the follow form</p>
+<p>$$<br>v_\pi(s) &#x3D; r_\pi(s) + \gamma \sum_{s^\prime} p_\pi(s^\prime|s) v_\pi(s^\prime)<br>$$</p>
+<p>where</p>
+<p>$$<br>\begin{aligned}	<br>    r_\pi(s) \triangleq \sum_a \pi(a|s) \sum_r p(r|s,a)r	\<br>    \<br>    \<br>    \<br>\end{aligned} \qquad<br>\begin{aligned}<br>    p_\pi(s^\prime|s) &amp; \triangleq \sum_a \pi(a|s) \sum_{s^\prime} p(s^\prime|s,a)	\<br>    &amp; &#x3D; \sum_{s^\prime} \sum_a \pi(a|s) p(s^\prime|s,a)	\<br>    &amp; &#x3D; p_\pi(s^\prime|s)<br>\end{aligned}<br>$$</p>
+<p>​	Suppose the states are indexed as $s_i$. For state $s_i$, the Bellman equation is </p>
+<p>$$<br>v_\pi(s_i) &#x3D; r_\pi(s_i) + \gamma \sum_{s_j} p_\pi(s_j|s_i) v_\pi(s_j)<br>$$</p>
+<p>Let $v_\pi&#x3D;[v_\pi(s_1),\dots,v_\pi(s_n)]^T \in \mathbb{R}^n$, $r_\pi&#x3D;[r_\pi(s_1),\dots,r_\pi(s_n)]^T \in \mathbb{R}^n$, and $P_\pi \in \mathbb{R}^{n\times n}$, where $[P_\pi]_{ij} &#x3D; p_\pi(s_j|s_i)$. Hence we have the matrix form as </p>
+<p>$$<br>v_\pi &#x3D; r_\pi + \gamma P_\pi v_\pi<br>$$</p>
+<p>For example, consider four states $s_i$ and four actions $a_i$ the matrix form can be</p>
+<p>$$<br>\underbrace{<br>    \begin{bmatrix}<br>        v_\pi(s_1) \<br>        v_\pi(s_2) \<br>        v_\pi(s_3) \<br>        v_\pi(s_4)<br>    \end{bmatrix}<br>}<em>{v_\pi} &#x3D;<br>\underbrace{<br>    \begin{bmatrix}<br>        r_\pi(s_1) \<br>        r_\pi(s_1) \<br>        r_\pi(s_1) \<br>        r_\pi(s_1)<br>    \end{bmatrix}<br>}</em>{r_\pi} + \gamma<br>\underbrace{<br>    \begin{bmatrix}<br>        p_\pi(s_1|s_1) &amp; p_\pi(s_2|s_1) &amp; p_\pi(s_3|s_1) &amp; p_\pi(s_4|s_1) \<br>        p_\pi(s_1|s_2) &amp; p_\pi(s_2|s_2) &amp; p_\pi(s_3|s_2) &amp; p_\pi(s_4|s_2) \<br>        p_\pi(s_1|s_3) &amp; p_\pi(s_2|s_3) &amp; p_\pi(s_3|s_3) &amp; p_\pi(s_4|s_3) \<br>        p_\pi(s_1|s_4) &amp; p_\pi(s_2|s_4) &amp; p_\pi(s_3|s_4) &amp; p_\pi(s_4|s_4) \<br>    \end{bmatrix}<br>}<em>{P_\pi}<br>\underbrace{<br>    \begin{bmatrix}<br>        v_\pi(s_1) \<br>        v_\pi(s_2) \<br>        v_\pi(s_3) \<br>        v_\pi(s_4)<br>    \end{bmatrix}<br>}</em>{v_\pi}<br>$$</p>
+<p><strong>Conclusions</strong>:</p>
+<ul>
+<li>So we have the <font color=blue>closed form</font> of the solution as $v_\pi &#x3D; (I-\gamma P_\pi)^{-1}r_\pi$. However the inverse operation is hard to implement.</li>
+<li>We seek for other iterative solving methods.</li>
+</ul>
+<p><strong>Iterative solution</strong></p>
+<p>​	We can directly sovle the Bellman equation using the following iterative algorithm:</p>
+<p>$$<br>\textcolor{blue}{v_{k+1} &#x3D; r_\pi + \gamma P_\pi v_k}<br>$$</p>
+<p>The proof is omitted.</p>
+<h3 id="2-5-Action-value"><a href="#2-5-Action-value" class="headerlink" title="2.5 Action value"></a>2.5 Action value</h3><p>​	<font color=red>Action value</font> is denoted by $q_\pi(s,a)$ which is defined as</p>
+<p>$$<br>q_\pi(s,a) \triangleq \mathbb{E}[G_t|S_t&#x3D;s, A_t&#x3D;a]<br>$$</p>
+<p>for all $s \in \mathcal{S}, a\in \mathcal{A}(s)$. </p>
+<p>Action value can be interpreted as <font color=blue>average return</font> along trajectory generated by <font color=blue>policy $\pi$ </font> after taking a <font color=blue>specific action $a$</font>.</p>
+<p>​	From the conditional expectation property that</p>
+<p>$$<br>\underbrace{\mathbb{E}[G_t|S_t&#x3D;s]}<em>{v_\pi(s)} &#x3D; \sum_a \pi(a|s) \underbrace{\mathbb{E}[G_t|S_t&#x3D;s,A_t&#x3D;a]}</em>{q_\pi(s)}<br>$$</p>
+<p>Hence, </p>
+<p>$$<br>v_\pi(s) &#x3D; \sum_a \pi(a|s) q_\pi(s)<br>$$</p>
+<p>So we can obtain the mathematical definition of action value as</p>
+<p>$$<br>\textcolor{blue}{q_\pi(s)&#x3D;\sum_r p(r|s,a)r	+ \gamma\sum_{s^\prime} p(s^\prime|s,a) v_\pi(s^\prime)	}<br>$$</p>
+<p>Substituting $(1)$ into $(2)$ we have</p>
+<p>$$<br>q_\pi(s,a)&#x3D;\sum_r p(r|s,a)r	+ \gamma\sum_{s^\prime} p(s^\prime|s,a) \sum_{a^\prime \in \mathcal{A}(s^\prime)}\pi(a^\prime|s^\prime) q_\pi(s^\prime,a^\prime)<br>$$<br>​	Suppose each state has the same number of actions. The matrix-vecotr form of Bellman eqaution in terms of action value is</p>
+<p>$$<br>\textcolor{red}{q_\pi &#x3D; \tilde{r} + \gamma P \Pi q_\pi}	\quad \text{(matrix-vector form)}<br>$$</p>
+<p>where $q_\pi \in \mathbb{R}^{|\mathcal{S}||\mathcal{A}|}$ is the action value vector indexed by state-action pairs. In particular, the $(s,a)$th element is </p>
+<p>$$<br>[q_\pi]_{(s,a)} &#x3D; q_\pi(s,a)<br>$$</p>
+<p>Here, $\tilde{r}\in\mathbb{R}^{|\mathcal{S} ||\mathcal{A} |}$ is the immediate reward vector indexed by state-action pairs. In paricular, the $(s,a)$th reward is</p>
+<p>$$<br>[\tilde{r}]_{(s,a)} &#x3D; \sum_r p(r|s,a)r<br>$$</p>
+<p>Here, $P\in \mathbb{R}^{|\mathcal{S}||\mathcal{A}|\times|\mathcal{S}| }$ is the probability transition matrix, whose row is indexed by state-action pairs and column indexed by states. In particular</p>
+<p>$$<br>[P]_{(s,a),s^\prime} &#x3D; p(s^\prime|s,a)<br>$$</p>
+<p>And $\Pi \in\mathbb{R}^{|\mathcal{S}|\times|\mathcal{S}||\mathcal{A}|}$ describes the policy $\pi$. In particular</p>
+<p>$$<br>\Pi_{s^\prime, (s^\prime,a^\prime)} &#x3D; \pi(a^\prime|s^\prime)<br>$$</p>
+<p>and the other entries of $\Pi$ is zero. $\Pi$ is block diagonal matrix with each block as a $1\times|\mathcal{A}|$ vector.</p>
+<hr>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>  <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1sd4y167NS/?spm_id_from=333.999.0.0">赵世钰老师的课程</a></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Shen Mu Xin</span>
+                    </p>
+                
+                
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Talk is cheap, show me your code.</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/RL/"># RL</a>
+                    
+                        <a href="/tags/Reinforcement-Learning/"># Reinforcement Learning</a>
+                    
+                        <a href="/tags/Deep-Learning/"># Deep Learning</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/12/24/hello-world/">Hello World</a>
+            
+            
+            <a class="next" rel="next" href="/2023/07/02/Reinforcement-Learning-with-Code-Chapter-1-Basic-Concepts/">Reinforcement Learning with Code [Chapter 1. Basic Concepts]</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Shen Mu Xin | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+        </span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
