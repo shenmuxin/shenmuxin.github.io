@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>Hello Algo学习笔记 1. 复杂度分析</title>
+      <link href="/2024/01/18/Hello-Algo%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-1-%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90/"/>
+      <url>/2024/01/18/Hello-Algo%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-1-%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Hello-Algo学习笔记-1-复杂度分析"><a href="#Hello-Algo学习笔记-1-复杂度分析" class="headerlink" title="Hello Algo学习笔记 1. 复杂度分析"></a>Hello Algo学习笔记 1. 复杂度分析</h1><h2 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h2><p>​递归 recursion 和常用的循环迭代不一样，这种策略算法通过调用自身来解决问题，它主要包含两个方面：</p><ol><li>递：程序不断深入调用自身，通常传入更下或更简化的参数，直到达到“终止条件”</li><li>归：出发“终止条件”之后，程序从最深处开始逐层返回，并且汇聚每一层的结果。</li></ol><p>从实现的角度来说，设计递归算法主要需要三个主要的条件</p><ol><li>终止条件：什么条件下终止“递”，从而开始“归”</li><li>递归调用：对应“递”，函数里应该不断调用自身，通常传入更小的参数</li><li>返回递归的结果：对应“归”，将当前递归层级的结果返回到上一级中。</li></ol><p>虽然从计算的角度来看，迭代与递归可以获得相类似的结果，但是它们是两种完全不同的思考和解决问题的范式。</p><ul><li>迭代：“自下而上”地解决问题，从基础的步骤开始，然后不断重复或者累加这些步骤，直到完成任务。</li><li>递归：”自上而下“地解决问题，如果问题和其子问题具有相同的形式，将原问题拆分为更小的部分，通过确定终止条件和返回结果来完成递归的调用。</li></ul><h3 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h3><p>​递归函数每次调用自身的时候，系统都会为其开启新的函数分配内存，来存储局部变量、调用地址和其他信息，这就会导致递归比迭代更消耗内存空间。</p><ul><li>函数的上下文数据都存储在称为”栈帧空间“的内存区域中，直到函数返回之后才会被释放。</li><li>递归函数会产生额外的开销。因此递归通常比循环的时间效率更低。</li></ul><h3 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a>尾递归</h3><p>​如果函数在返回前的最后一步才进行递归调用，则这种递归就被称为<strong>尾递归 tail recursion</strong>，这种尾递归可以通过编译器来实现自动优化，递归和迭代的特点对比如下：</p><table><thead><tr><th align="left"></th><th align="left">迭代</th><th align="left">递归</th></tr></thead><tbody><tr><td align="left">实现方式</td><td align="left">循环结构</td><td align="left">函数调用自身</td></tr><tr><td align="left">时间效率</td><td align="left">效率通常较高，无函数调用开销</td><td align="left">每次函数调用都会产生开销</td></tr><tr><td align="left">内存使用</td><td align="left">通常使用固定大小的内存空间</td><td align="left">累积函数调用可能使用大量的栈帧空间</td></tr><tr><td align="left">适用问题</td><td align="left">适用于简单循环任务，代码直观、可读性好</td><td align="left">适用于子问题分解，如树、图、分治、回溯等，代码结构简洁、清晰</td></tr></tbody></table><h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p>​我们常说的时间复杂度，其实是指算法的渐进上界，其数学定义如下：</p><p>若存在正实数$c$和实数$n_0$，使得对于所有的$n&gt; n_0$，均有$T(n)\le c \cdot f(n)$，则可以认为$f(n)$给出了$T(n)$的一个渐进上界，记为$T(n)&#x3D;O(f(n))$。</p><p>计算渐进上界其实就是寻找一个函数$f(n)$，使得当$n$趋于$\infty$的时候，$T(n)$和$f(n)$处于相同的增长级别。</p><p>​计算时间复杂度，可以遵循下列的计算技巧：</p><ul><li>忽略$T(n)$中的常数项，因为常数项对时间复杂度都不产生影响</li><li>省略所有系数</li><li>循环嵌套的时候使用乘法</li><li>时间复杂度由$T(n)$中的最高阶项来决定</li></ul><p>常见的时间复杂度类型有：<br>$$<br>O(1) &lt; O(\log n) &lt; O(n) &lt; O(n\log n) &lt; O(n^2) &lt; O(2^n) &lt; O(n!)<br>$$<br>指数阶对应的是每次增加一倍的情况，类似与”细胞分裂“的过程，而对数阶对应的是每次缩减一倍的情况。</p><h2 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h2><p>​空间复杂度的推算方法与时间复杂度大致相同，只是将统计的对象从“操作数”变为了“使用内存大小”，与时间复杂度不同，我们只需要关注于最差空间复杂度，因为内存空间是一项硬性要求，我们必须确保所有的输入数据都有足够的内存空间预留。最差空间复杂度表示以算法运行中的峰值内存为准。</p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.hello-algo.com/">Hello算法</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Algorithm </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Algorithm </tag>
+            
+            <tag> Data Structure </tag>
+            
+            <tag> 算法 </tag>
+            
+            <tag> 数据结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>hexo+github搭建个人博客 教程(三)客制化butterfly主题</title>
       <link href="/2023/12/28/hexo-github%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2-%E6%95%99%E7%A8%8B-%E4%B8%89-%E5%AE%A2%E5%88%B6%E5%8C%96butterfly%E4%B8%BB%E9%A2%98/"/>
       <url>/2023/12/28/hexo-github%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2-%E6%95%99%E7%A8%8B-%E4%B8%89-%E5%AE%A2%E5%88%B6%E5%8C%96butterfly%E4%B8%BB%E9%A2%98/</url>
