@@ -13,7 +13,7 @@
       
       <categories>
           
-          <category> ROS相关 </category>
+          <category> ROS </category>
           
       </categories>
       
@@ -60,6 +60,33 @@
             <tag> 6D位姿抓取 </tag>
             
             <tag> 机械臂 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Ubuntu中复现Graspnet</title>
+      <link href="/2024/05/10/Ubuntu%E4%B8%AD%E5%A4%8D%E7%8E%B0Graspnet/"/>
+      <url>/2024/05/10/Ubuntu%E4%B8%AD%E5%A4%8D%E7%8E%B0Graspnet/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Ubuntu20-04中GraspNet复现流程"><a href="#Ubuntu20-04中GraspNet复现流程" class="headerlink" title="Ubuntu20.04中GraspNet复现流程"></a>Ubuntu20.04中GraspNet复现流程</h1><p><strong>非常重要的环境配置</strong></p><ul><li>ubuntu 20.04</li><li>cuda 11.0.1</li><li>cudnn v8.9.7</li><li>python 3.8.19</li><li>pytorch 1.7.0</li><li>numpy 1.23.5</li></ul><p>详细的信息如下：</p><p><img src="https://pic.imgdb.cn/item/66d2f882d9c307b7e943e928.png" alt="img"></p><p>笔者在复现的过程中遇到了许多的坑，现在记录一下，来帮助希望也能够复现的同学。</p><h2 id="1-安装cuda和cudnn"><a href="#1-安装cuda和cudnn" class="headerlink" title="1.安装cuda和cudnn"></a>1.安装cuda和cudnn</h2><p>具体可以参考这篇：<a href="https://blog.csdn.net/qq_44940689/article/details/138496584">ubuntu配置多版本cuda+cudnn环境，及版本切换方法</a></p><h2 id="2-安装pytorch"><a href="#2-安装pytorch" class="headerlink" title="2.安装pytorch"></a>2.安装pytorch</h2><p>具体可以参考这篇：<a href="https://blog.csdn.net/qq_44940689/article/details/132684758">【Linux】Ubuntu20.04版本配置pytorch环境2023.09.05【教程】</a></p><h2 id="3-编译graspnetAPI"><a href="#3-编译graspnetAPI" class="headerlink" title="3.编译graspnetAPI"></a>3.编译graspnetAPI</h2><p>直接参考官方给的流程就好，参考这里：<a href="https://github.com/graspnet/graspnet-baseline?tab=readme-ov-file">graspnet-baseline</a></p><p>然后下载官方给的预训练权重，运行demo</p><p>如果出现问题：</p><blockquote><p>ImportError: numpy.core.multiarray failed to import ( auto-generated, because you didn’t call ‘numpy.import _array()’ after cimporting numpy; use ‘<void>numpy.<em>import</em> array’ to  disable if you are certain you don’t need it)</p></blockquote><p>或者其他<code>numpy</code>相关的问题，我们可以把<code>numpy</code>的版本换成<code>numpy==1.23.5</code>，而不是默认的<code>numpy==1.20.3</code></p><p>直接在你的虚拟环境中</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install numpy==1.23.5</span><br></pre></td></tr></table></figure><p>即可完成替换，然后再运行demo</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh command_demo.sh</span><br></pre></td></tr></table></figure><p>即可出现以下的结果：</p><p><img src="https://pic.imgdb.cn/item/66d2f85fd9c307b7e9439b4e.png" alt="img"></p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1]<a href="https://blog.csdn.net/weixin_49663860/article/details/136941470">复现GraspNet遇到的问题-解决方法！</a><br>[2]<a href="https://blog.csdn.net/weixin_45622961/article/details/136753265?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2-136753265-blog-136941470.235%5Ev43%5Econtrol&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2-136753265-blog-136941470.235%5Ev43%5Econtrol&utm_relevant_index=5">GraspNet-baseline复现—-Linux-Ubuntu</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 6D位姿抓取算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Graspnet </tag>
+            
+            <tag> 6D位姿抓取 </tag>
             
         </tags>
       
