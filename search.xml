@@ -172,6 +172,33 @@
     
     
     <entry>
+      <title>相机模型的内参和外参</title>
+      <link href="/2024/04/03/%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%86%85%E5%8F%82%E5%92%8C%E5%A4%96%E5%8F%82/"/>
+      <url>/2024/04/03/%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%86%85%E5%8F%82%E5%92%8C%E5%A4%96%E5%8F%82/</url>
+      
+        <content type="html"><![CDATA[<h1 id="相机模型的内参和外参"><a href="#相机模型的内参和外参" class="headerlink" title="相机模型的内参和外参"></a>相机模型的内参和外参</h1><p>这篇笔记主要参考：<a href="https://book.douban.com/subject/34782244/">slam十四讲第二版（高翔）</a></p><p>相机将三维世界中的坐标点（单位为米）映射到二维的像素平面（单位为像素）的过程能够使用一个几何模型来进行描述，为了简单起见这个模型我们通常使用<strong>针孔模型</strong>。同时，由于相机镜头上透镜的存在，透镜的安装不能保证绝对的准确，因此在成像的过程中还会出现<strong>畸变</strong>。因此，我们使用针孔模型和畸变模型来描述整个投影过程。</p><p>针孔模型和畸变模型能够把外部的三维点投影到相机内部的成像平面，这组参数就构成了相机的<strong>内参</strong>（intrinsics）</p><h3 id="1-针孔模型、畸变模型（内参）"><a href="#1-针孔模型、畸变模型（内参）" class="headerlink" title="1. 针孔模型、畸变模型（内参）"></a>1. 针孔模型、畸变模型（内参）</h3><p>针孔模型可以用中学学习的小孔呈现原理来进行解释，如下图所示，</p><p><img src="https://pic.imgdb.cn/item/66d40747d9c307b7e919dbe6.png" alt="img"></p><p>图中包括两个坐标系，一个是相机内部的<strong>物理成像平面坐标系</strong>$O^\prime-x^\prime-y^\prime$，这是一个二维的坐标系，还有一个是以<strong>相机的光心</strong>为中心的<strong>相机坐标系</strong>$O-x-y-z$，这是一个三维坐标系。根据小孔成像原理，现实世界中的$P$点在经过小孔$O$投影之后，落在物理平面$O^\prime-x^\prime-y^\prime$上，成像点为$P^\prime$，设$P$的坐标为$[X,Y,Z]^T$，$P^\prime=[X^\prime,Y^\prime,Z^\prime]^T$，并且设物理成像平面到小孔的距离为$f$（焦距），那么根据三角形的相似原理，我们很容易得到如下的等式：</p><script type="math/tex; mode=display">\frac{Z}{f} = - \frac{X}{X^\prime} = - \frac{Y}{Y^\prime}</script><p>为了让模型更符合实际，我们可以利用算法等价地把成像平面对称地放到相机的前方，和三维空间点一起放在相机坐标系的同一侧，如图所示：</p><p><img src="https://pic.imgdb.cn/item/66d4079ad9c307b7e91a1f9c.png" alt="img"></p><p>这样我们就可以把负号去掉了，使式子更加简洁</p><script type="math/tex; mode=display">\begin{align*}    \frac{Z}{f} & = \frac{X}{X^\prime} = \frac{Y}{Y^\prime}    \\    X^\prime & = f\frac{X}{Z}    \\    Y^\prime & = f\frac{Y}{Z}\end{align*}</script><p>上式描述了点$P$和它的像之间的空间关系，这里的所有单位都可以用米（m）来表示。不过在最终的相机中，我们获得的是一个个的像素，这需要我们在成像平面上进行采样和量化。为了描述传感器将感受到的光线转换成图片像素的过程，<strong>我们设在物理成像平面上固定着一个像素平面</strong>$o-u-v$，如下图所示</p><p><img src="https://pic.imgdb.cn/item/66d407a5d9c307b7e91a2a35.png" alt="img"></p><p>像素坐标系通常的定义方式为：原点$o$位于图像的左上角，$u$轴和$x$轴平行，$v$轴向下和$y$轴平行，像素坐标系和成像平面之间相差了一个缩放和一个原点的平移。我们假设现像素平面下的坐标$P^\prime=[u,v]^T$。设像素坐标在$u$轴上缩放了$\alpha$倍，在$v$轴上缩放了$\beta$倍，同时原点移动了$[c_x,c_y]^T$，这样$P^\prime$在成像坐标系下的坐标$[X^\prime,Y^\prime]^T$与像素坐标系下的坐标$[u,v]^T$具有如下的关系：</p><script type="math/tex; mode=display">\left\{\begin{align*}    u & = \alpha X^\prime + c_x \\    v & = \beta Y^\prime + c_y\end{align*}\right.</script><p>代入之前的关系，有下式</p><script type="math/tex; mode=display">\left\{\begin{align*}    u & = \alpha f\frac{X}{Z} + c_x \\    v & = \beta f\frac{Y}{Z}+ c_y\end{align*}\right.</script><p>然后把$\alpha f$合并为$f_x$，把$\beta f$合并为$f_y$，得：</p><script type="math/tex; mode=display">\left\{\begin{align*}    u & = f_x\frac{X}{Z} + c_x \\    v & = f_y\frac{Y}{Z}+ c_y\end{align*}\right.</script><p>其中，$f$的单位为米，$\alpha, \beta$的单位为像素/米。再将上式写成齐次的形式</p><script type="math/tex; mode=display">\begin{bmatrix}u    \\v    \\1\end{bmatrix} = \frac{1}{Z}\begin{bmatrix}f_x & 0 & c_x    \\0 & f_y & c_y    \\0 & 0 & 1\end{bmatrix}\begin{bmatrix}X    \\Y    \\Z\end{bmatrix}    \triangleq \frac{1}{Z}\bold{K}\bold{P}</script><p>然后再将$Z$移到左边</p><script type="math/tex; mode=display">Z\begin{bmatrix}u    \\v    \\1\end{bmatrix} = \begin{bmatrix}f_x & 0 & c_x    \\0 & f_y & c_y    \\0 & 0 & 1\end{bmatrix}\begin{bmatrix}X    \\Y    \\Z\end{bmatrix}    \triangleq \bold{K}\bold{P}</script><p>其中，我们将中间量组成的矩阵$\bold{K}$称为相机的<strong>内参矩阵</strong>（Camera Intrinsics）。$\bold{K}$通常认为，相机的内参在出厂之后就已经固定好了，不会在使用的过程中发生变化，有时$\bold{K}$是由厂家提供，有时$\bold{K}$需要自己进</p><p>有了内参矩阵$\bold{K}$，我们就可以通过确定像素点的坐标$P_{uv}$，来反算出点$P$在相机坐标系中的位置$[X,Y,Z]^T$，然后通过这个位置就可以计算出点$P$在世界坐标系world中的坐标$P_w$了。</p><p>相机的畸变模型，这里不再介绍了，感兴趣的可以去看原书。</p><h3 id="2-手眼标定（外参）"><a href="#2-手眼标定（外参）" class="headerlink" title="2. 手眼标定（外参）"></a>2. 手眼标定（外参）</h3><p>相机的外参一般指的是从相机坐标系到机器人的基坐标系的齐次变换矩阵，当然这个齐次变换矩阵也可以用旋转矩阵$\bold{R}$和平移向量来进行描述$\bold{t}$，有下式成立</p><script type="math/tex; mode=display">ZP_{uv} = Z \begin{bmatrix}u    \\v    \\1\end{bmatrix} = \bold{K}(\bold{R}P_w + \bold{t}) = \bold{K}\bold{T}P_w</script><p>这个在以后的博客中再详细介绍。</p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1]<a href="https://book.douban.com/subject/34782244/">slam十四讲第二版（高翔）</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Robotics </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Robotics </tag>
+            
+            <tag> 相机模型 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>机器人学之刚体运动</title>
       <link href="/2024/04/02/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%8B%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8/"/>
       <url>/2024/04/02/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%8B%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8/</url>
