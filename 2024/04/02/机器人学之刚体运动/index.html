@@ -1,0 +1,360 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>机器人学之刚体运动 | Shen Mu Xin's Blog</title><meta name="author" content="Shen Mu Xin"><meta name="copyright" content="Shen Mu Xin"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="笔者记录学习机器人学的过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器人学之刚体运动">
+<meta property="og:url" content="http://shenmuxin.github.io/2024/04/02/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%8B%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8/index.html">
+<meta property="og:site_name" content="Shen Mu Xin&#39;s Blog">
+<meta property="og:description" content="笔者记录学习机器人学的过程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic.imgdb.cn/item/66d40367d9c307b7e910b891.png">
+<meta property="article:published_time" content="2024-04-02T07:28:55.000Z">
+<meta property="article:modified_time" content="2024-09-01T06:14:04.261Z">
+<meta property="article:author" content="Shen Mu Xin">
+<meta property="article:tag" content="机器人学">
+<meta property="article:tag" content="Robotics">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/66d40367d9c307b7e910b891.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://shenmuxin.github.io/2024/04/02/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%8B%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":-1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '机器人学之刚体运动',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-09-01 14:14:04'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+document.addEventListener('pjax:send', () => {
+  Pace.restart()
+})
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js/pace.min.js"></script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://pic.imgdb.cn/item/66d40367d9c307b7e910b891.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Shen Mu Xin's Blog"><span class="site-name">Shen Mu Xin's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">机器人学之刚体运动</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-02T07:28:55.000Z" title="发表于 2024-04-02 15:28:55">2024-04-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-09-01T06:14:04.261Z" title="更新于 2024-09-01 14:14:04">2024-09-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Robotics/">Robotics</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="机器人学之刚体运动"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="机器人学之刚体运动"><a href="#机器人学之刚体运动" class="headerlink" title="机器人学之刚体运动"></a>机器人学之刚体运动</h1><h2 id="1-刚体运动"><a href="#1-刚体运动" class="headerlink" title="1. 刚体运动"></a>1. 刚体运动</h2><h3 id="1-1-刚体变换"><a href="#1-1-刚体变换" class="headerlink" title="1.1 刚体变换"></a>1.1 刚体变换</h3><p>三维空间中可以用坐标$(x,y,z)\in\mathcal{R}^3$来描述质点的位置，而质点的运动轨迹可以使用参数形式来进行表示：$p(t)&#x3D;(x(t),y(t),z(t))\in\mathcal{R}^3$。在机器人学中，我们通常关心的问题通常不是一个质点的运动，而是一组质点共同的运动。如果一条杆上的质点保持相对距离不变，我们认为其是一个不变的形体，可以严格定义刚体如下：</p>
+<h4 id="刚体"><a href="#刚体" class="headerlink" title="刚体"></a>刚体</h4><p>刚体（rigid body）是任意两质点之间距离保持不变的质点的集合，并与物体的任意运动和作用在物体上的任意力无关。用数学的表示即是：</p>
+<p>$$<br>||p(t) - q(t)|| &#x3D; ||p(0) - q(0)||<br>$$</p>
+<h4 id="刚体变换"><a href="#刚体变换" class="headerlink" title="刚体变换"></a>刚体变换</h4><p>刚体变换（rigid body transformation），满足以下条件的变换$g:\mathcal{R}^3 \to \mathcal{R}^3$，被称为刚体变换：</p>
+<ol>
+<li>长度不变，对于任意的点$p,q\in\mathcal{R}^3$，均有$||g(p)-g(q)|| &#x3D; ||p-q||$；</li>
+<li>叉积不变，对于任意的矢量$v,w\in\mathcal{R}^3$，均有$g_{<em>}(v\times w)&#x3D;g_{</em>}(v)\times g_{*}(w)$。</li>
+</ol>
+<p>刚体上任意两点之间的距离以及任意两矢量之间的叉积固定不变并不意味着刚体上质点建不能有相对运动，只是这些运动只能是旋转而不能是移动。</p>
+<h3 id="1-2-三维空间中的旋转运动"><a href="#1-2-三维空间中的旋转运动" class="headerlink" title="1.2 三维空间中的旋转运动"></a>1.2 三维空间中的旋转运动</h3><p>设A为惯性坐标系，B为与刚体固连的动坐标系，$x_{ab},y_{ab},z_{ab}\in\mathcal{R}^3$为坐标系B中主坐标轴相对于A坐标系的坐标，依次排列这三个坐标矢量，就构成了一个3x3的矩阵：</p>
+<p>$$<br>R_{ab} &#x3D; [x_{ab},y_{ab},z_{ab}] \in \mathcal{R}^{3\times3}<br>$$</p>
+<p>按照这种方式构建的矩阵被称为旋转矩阵（rotation matrix）：物体相对于定坐标系的每一次旋转都对应一个该形式的旋转矩阵。旋转矩阵也可称为<strong>位姿</strong>（configuration）</p>
+<p>旋转矩阵满足以下的性质，设$R\in\mathcal{R}^{3\times3}$为旋转矩阵，$r_1,r_2,r_3\in\mathcal{R}^3$为其列矢量，因为旋转矩阵$R$的列矢量是相互正交的所以则有：</p>
+<p>$$<br>r_{i}^Tr_j &#x3D; \left{<br>\begin{align}<br>0, \text{if } i\ne j	\<br>1, \text{if } i&#x3D;j<br>\end{align}<br>\right.<br>$$</p>
+<p>写成矩阵的形式则有，$RR^T&#x3D;R^TR&#x3D;I$，$det R &#x3D; \pm1$</p>
+<h4 id="群"><a href="#群" class="headerlink" title="群"></a>群</h4><p>群（group）定义如下，对于元素可用算子$\circ$构成二元运算的集合$G$，若满足以下条件则被成为群：</p>
+<ol>
+<li>封闭性：若$g_1,g_2\in\mathcal{R}^{3\times3}$，则$g_1 \circ g_2\in G$；</li>
+<li>单位性：对于任意的$g\in G$，一定存在一个单位元素$e$，使得$g\circ e&#x3D;e\circ g &#x3D;g$；</li>
+<li>可逆性：对于任意的$g\in G$，一定存在唯一的逆$g^{-1}\in G$，使得$g\circ g^{-1}&#x3D;g^{-1}\circ g&#x3D;e$；</li>
+<li>结合性：若$g_1,g_2,g_3\in G$，则有$(g_1\circ g_2)\circ g_3 &#x3D; g_1\circ (g_2\circ g_3)$</li>
+</ol>
+<p>所有旋转矩阵的集合满足群的性质，被称为$SO(3)$，符号$SO(3)$是special orthogonal的缩写，$SO(3)$是一个群。</p>
+<h4 id="求质点坐标的相对变换"><a href="#求质点坐标的相对变换" class="headerlink" title="求质点坐标的相对变换"></a>求质点坐标的相对变换</h4><p>如果坐标系A和坐标系B之间只存在旋转变换，$q$在B坐标系中的坐标为$q_b&#x3D;(x_b,y_b,z_b)$，且已知坐标系B相对于坐标系A的旋转矩阵为$R_{ab} &#x3D; [x_{ab},y_{ab},z_{ab}] \in \mathcal{R}^{3\times3}$，那么$q$在A坐标系中的坐标为</p>
+<p>$$<br>q_a &#x3D;<br>\begin{bmatrix}<br>x_{ab} &amp; y_{ab} &amp; z_{ab}<br>\end{bmatrix}<br>\begin{bmatrix}<br>x_{b} \<br>y_{b} \<br>z_{b}<br>\end{bmatrix} &#x3D; R_{ab}q_b<br>$$</p>
+<p>即旋转矩阵$R_{ab}$表示一点从坐标系B到坐标系A坐标的<strong>旋转变换</strong>（不包含平移变换）。</p>
+<h4 id="旋转矩阵的合成法则"><a href="#旋转矩阵的合成法则" class="headerlink" title="旋转矩阵的合成法则"></a>旋转矩阵的合成法则</h4><p>旋转矩阵可以通过矩阵相乘加以结合，从而形成新的旋转矩阵。如果坐标系C相对于坐标系B的姿态为$R_{bc}$，坐标系B相对于另一坐标系A的姿态为$R_{ab}$，那么，坐标系C相对于坐标系A的位形为</p>
+<p>$$<br>R_{ac} &#x3D; R_{ab}R_{bc}<br>$$</p>
+<h4 id="用线性算子来计算叉积"><a href="#用线性算子来计算叉积" class="headerlink" title="用线性算子来计算叉积"></a>用线性算子来计算叉积</h4><p>有两个矢量$a&#x3D;[a_1,a_2,a_3]^T,b&#x3D;[b_1,b_2,b_3]^T$，两矢量的叉积结果为：</p>
+<p>$$<br>a\times b &#x3D;<br>\begin{bmatrix}<br>a_2b_3 - a_3b_2 \<br>a_3b_1 - a_1b_3 \<br>a_1b_2 - a_2b_1<br>\end{bmatrix}<br>$$</p>
+<p>可以表示为$a\times b&#x3D;\hat{a}b$，其中</p>
+<p>$$<br>\hat{a} &#x3D; \begin{bmatrix}<br>0 &amp; -a_3 &amp; a_2 \<br>a_3 &amp; 0 &amp; -a_1 \<br>-a_2 &amp; a_1 &amp; 0<br>\end{bmatrix}<br>$$</p>
+<p>这样可以简便地计算叉积。</p>
+<h4 id="叉积的右手法则"><a href="#叉积的右手法则" class="headerlink" title="叉积的右手法则"></a>叉积的右手法则</h4><p>叉积的概念非常有用，可以通过两个向量的叉乘，生成第三个垂直于a，b的法向量，从而构建X、Y、Z坐标系。如下图所示，用右手从叉积符号前的矢量转向叉积符号后的矢量，大拇指的指向就为结果矢量的方向。叉积在三维空间中的意义是生成一个垂直于两个矢量的新矢量，叉积在二维空间中的意义是两矢量所构成的平行四边形的面积。</p>
+<p><img src="https://pic.imgdb.cn/item/66d40471d9c307b7e9130974.png" alt="img"></p>
+<h4 id="叉积用于计算线速度"><a href="#叉积用于计算线速度" class="headerlink" title="叉积用于计算线速度"></a>叉积用于计算线速度</h4><p>线速度$v$是角速度$\omega$（<font color=blue>角速度的方向为旋转轴的方向</font>）与垂直于旋转轴且指向质点的矢量$r$的叉积，</p>
+<p>$$<br>v &#x3D; \omega \times r<br>$$</p>
+<p>如图所示：</p>
+<p><img src="https://pic.imgdb.cn/item/66d40484d9c307b7e9131841.png" alt="img"></p>
+<h4 id="旋转的指数坐标"><a href="#旋转的指数坐标" class="headerlink" title="旋转的指数坐标"></a>旋转的指数坐标</h4><p>设$\omega\in\mathcal{R}^3$是表示旋转方向的单位矢量，$\theta\in\mathcal{R}$为旋转角度，物体的每次转动都存在一个旋转矩阵$R\in SO(3)$与之对应，因此可以将旋转矩阵$R$表示为旋转轴$\omega$和旋转角度$\theta$的函数。推导过程如下：</p>
+<p>已知刚体上一质点的速度$v$与角速度$w$满足关系$v&#x3D;w\times r$，$r$为旋转轴到质点的矢量。考虑旋转体上一质点$q$的速度，物体以单位角速度绕$\omega$作<strong>匀速</strong>旋转，那么$q$点的速度$\dot{q}$可以表示为：</p>
+<p>$$<br>\dot{q}(t) &#x3D; \omega \times q(t) &#x3D; \hat{\omega} q(t)<br>$$</p>
+<p>求解这个微分方程可以得到</p>
+<p>$$<br>q(t) &#x3D; e^{\hat{\omega}t}q(0)<br>$$</p>
+<p>其中$q(0)$是质点$q$的起始位置，$e^{\hat{\omega}t}$是矩阵指数，由矩阵分析的知识可以知道，该矩阵指数可以进行展开如下：</p>
+<p>$$<br>e^{\hat{\omega}t} &#x3D; I + \hat{\omega}t + \frac{(\hat{\omega}t)^2}{2!} + \frac{(\hat{\omega}t)^3}{3!} + \cdots<br>$$</p>
+<p>又由于已经规定了旋转的角速度为单位角速度，那么旋转矩阵就可以写成旋转轴$\omega$和旋转角度$\theta$的函数了:</p>
+<p>$$<br>R(\omega,\theta) &#x3D; e^{\hat{\omega}\theta}<br>$$</p>
+<p>算子$\hat{\omega}$是反对称阵，满足$\hat{\omega}^T&#x3D;-\hat{\omega}$，我们将所有这种$3\times3$的反对称阵组成的矢量空间记为$so(3)\in SO(3)$。</p>
+<p><img src="https://pic.imgdb.cn/item/66d40494d9c307b7e913277a.png" alt="img"></p>
+<h4 id="Rodrigues公式"><a href="#Rodrigues公式" class="headerlink" title="Rodrigues公式"></a>Rodrigues公式</h4><p>对于前面提到的矩阵指数$e^{\hat{\omega}\theta}$，我们难以直接计算，我们需要借助Taylor展开来进行化简。首先，我们需要指导算子$\hat{\omega}$的幂是怎么计算的：</p>
+<p>$$<br>\hat{\omega}^2 &#x3D; \omega\omega^T - ||\omega||^2I	\<br>\hat{\omega}^3 &#x3D; - ||\omega||^2\hat{\omega}<br>$$</p>
+<p>且规定了以单位速度进行旋转，则$||\omega||&#x3D;1$，那么之前的Taylor展开可以化简为：</p>
+<p>$$<br>e^{\hat{\omega}\theta} &#x3D; I + \Big(\theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \cdots \Big)\hat{\omega} + \Big(\frac{\theta^2}{2!} - \frac{\theta^4}{4!} + \frac{\theta^6}{6!} - \cdots 	\Big) \hat{\omega}^2<br>$$</p>
+<p>然后再根据$\sin \theta$和$\cos \theta$的Taylor展开可以进一步化简为：</p>
+<p>$$<br>\textcolor{red}{e^{\hat{\omega}\theta} &#x3D; I + \hat{\omega}\sin \theta + \hat{\omega}^2(1-\cos \theta)}<br>$$</p>
+<p>当$||w||\ne 1$的时候，上述公式可以修正为：</p>
+<p>$$<br>\textcolor{red}{e^{\hat{\omega}\theta} &#x3D; I + \frac{\hat{\omega}}{||\omega||}\sin (||\omega||\theta) + \frac{\hat{\omega}^2}{||\omega||^2}(1-\cos (||\omega||\theta))}<br>$$</p>
+<p>这就是用于计算旋转矩阵$R$的Rodrigues公式。</p>
+<h4 id="计算旋转矩阵的例子"><a href="#计算旋转矩阵的例子" class="headerlink" title="计算旋转矩阵的例子"></a>计算旋转矩阵的例子</h4><p>让我们举一个例子，假设我们要绕单位向量$u&#x3D;[0,0,1]^T$（绕z轴）旋转$\theta&#x3D;\frac{\pi}{2}$弧度，我们使用Rodrigues’ formula来计算旋转矩阵：</p>
+<p>首先计算反对称矩阵$\hat{u}$</p>
+<p>$$<br>\hat{u} &#x3D;<br>\begin{bmatrix}<br>0 &amp; -u_z &amp; u_y \<br>u_z &amp; 0 &amp; -u_x \<br>-u_y &amp; u_x &amp; 0<br>\end{bmatrix} &#x3D;<br>\begin{bmatrix}<br>0 &amp; -1 &amp; 0 \<br>1 &amp; 0 &amp; 0 \<br>0 &amp; 0 &amp; 0<br>\end{bmatrix} \<br>\hat{u}^2 &#x3D;<br>\begin{bmatrix}<br>-1 &amp; 0 &amp; 0 \<br>0 &amp; -1 &amp; 0 \<br>0 &amp; 0 &amp; 0<br>\end{bmatrix}<br>$$</p>
+<p>然后带入Rodrigues公式</p>
+<p>$$<br>\begin{align}<br>R_z(\theta) &amp; &#x3D; I + \sin\theta \hat{u} + (1-\cos \theta)\hat{u}^2	\<br>&amp; &#x3D;<br>\begin{bmatrix}<br>1 &amp; &amp; \<br>&amp; 1 &amp; \<br>&amp; &amp; 1<br>\end{bmatrix} +<br>\begin{bmatrix}<br>0 &amp; -\sin\theta &amp; 0 \<br>-\sin\theta &amp; 0 &amp; 0 \<br>0 &amp; 0 &amp; 0<br>\end{bmatrix} +<br>\begin{bmatrix}<br>\cos\theta-1 &amp; 0 &amp; 0 \<br>0 &amp; \cos\theta-1 &amp; 0\<br>0 &amp; 0 &amp; 0<br>\end{bmatrix}	\<br>&amp; &#x3D;<br>\begin{bmatrix}<br>\cos\theta &amp; -\sin\theta &amp; 0 \<br>\sin\theta &amp; \cos\theta &amp; 0\<br>0 &amp; 0 &amp; 1<br>\end{bmatrix}_{\theta&#x3D;\frac{\pi}{2}}	\<br>&amp; &#x3D;<br>\begin{bmatrix}<br>0 &amp; -1 &amp; 0 \<br>1 &amp; 0 &amp; 0\<br>0 &amp; 0 &amp; 1<br>\end{bmatrix}<br>\end{align}<br>$$</p>
+<h4 id="四元数"><a href="#四元数" class="headerlink" title="四元数"></a>四元数</h4><p>四元数（quafernions）是复数的推广，四元数通过四个数来描述旋转运动，给出了$SO(3)$的一个全局参数表示法。四元数是一个矢量，其一般的表示形式为：</p>
+<p>$$<br>Q &#x3D; q_0 + q_1 i + q_2 j + q_3 k<br>$$</p>
+<p>其中$q_0$为$Q$的标量部分，$q&#x3D;(q_1,q_2,q_3)$为矢量部分。</p>
+<h3 id="1-3-三维空间中的刚体运动"><a href="#1-3-三维空间中的刚体运动" class="headerlink" title="1.3 三维空间中的刚体运动"></a>1.3 三维空间中的刚体运动</h3><p>通常来说，刚体运动包括旋转和平移两部分。如图描述固定于刚体上的动坐标系B相对于惯性坐标系A的位姿，设坐标系A的原点至坐标系B的原点的位置矢量为$p_{ab}\in\mathcal{R}^3$，B系相对于A系的姿态为$R_{ab}\in SO(3)$。B系相对于A系的运动包括平移$p_{ab}$和旋转$R_{ab}$，所以系统的位姿由$g_{ab}&#x3D;(p_{ab},R_{ab})$确定，系统的位形空间为$\mathcal{R}^3$与$SO(3)$的乘积空间，记为$SE(3)$，意为：Special Euclidean</p>
+<p>$$<br>SE(3) &#x3D; |(p,R):p\in\mathcal{R}^3,R\in SO(3)| &#x3D; \mathcal{R}^3 \times SO(3)<br>$$</p>
+<p><img src="https://pic.imgdb.cn/item/66d404a3d9c307b7e9133afb.png" alt="img"></p>
+<p>与旋转的情况类似，元素$g&#x3D;(p, R)\in SE(3)$既可以用于确定刚体的位形，又可以用于由一点的坐标到另一坐标系的坐标变换。若，$q_a,q_b\in\mathcal{R}^3$是分别属于A系和B系的坐标，当已知$q_b$时，$q_a$可以通过坐标变换来得到</p>
+<p>$$<br>\begin{align}<br>q_a &amp; &#x3D; g_{ab}(q_b)	\<br>q_a &amp; &#x3D; p_{ab} + R_{ab}q_b<br>\end{align}<br>$$</p>
+<p>其中$g_{ab}&#x3D;(p_{ab},R_{ab})\in SE(3)$表示B系相对于A系的位形，用符号$g(q)$来表示这一刚体变换，即：</p>
+<p>$$<br>g(q) &#x3D; p + Rq<br>$$</p>
+<h4 id="齐次坐标表示法"><a href="#齐次坐标表示法" class="headerlink" title="齐次坐标表示法"></a>齐次坐标表示法</h4><p>为了使包含平移和旋转的刚体变换更简单（像纯旋转变化那样通过一个矩阵运算就能表示），所以引入了齐次坐标表示法。</p>
+<p>首先给质点的坐标增加一个维度，最后一个维度设置为1，组成一个四维矢量（称为齐次坐标）：</p>
+<p>$$<br>\bar{q} &#x3D; [q_1, q_2, q_3, 1]^T<br>$$</p>
+<p>矢量是通过质点的坐标相减获得的，所以矢量的齐次表示为：</p>
+<p>$$<br>\bar{v} &#x3D; [v_1, v_2, v_3, 0]^T<br>$$</p>
+<p>矢量和点的齐次坐标表示的第四个分量分别为0和1，请注意这一个差别。将上述的刚体变换$q_a &#x3D; p_{ab} + R_{ab}q_b$写成矩阵的形式：</p>
+<p>$$<br>\bar{q}<em>a &#x3D;<br>\begin{bmatrix}<br>q_a \<br>1<br>\end{bmatrix} &#x3D;<br>\begin{bmatrix}<br>R</em>{ab} &amp; p_{ab} \<br>0 &amp; 1 \<br>\end{bmatrix}<br>\begin{bmatrix}<br>q_b \<br>1<br>\end{bmatrix} &#x3D;: \bar{g}<em>{ab}\bar{q}<em>b<br>$$<br>$\bar{g}</em>{ab}$称为$g</em>{ab}\in SE(3)$的齐次表示。通常，若$g&#x3D;(p,R)\in SE(3)$，那么<br>$$<br>\bar{g} &#x3D;<br>\begin{bmatrix}<br>R &amp; p \<br>0 &amp; 1<br>\end{bmatrix}<br>$$</p>
+<h4 id="齐次表示刚体变换的逆"><a href="#齐次表示刚体变换的逆" class="headerlink" title="齐次表示刚体变换的逆"></a>齐次表示刚体变换的逆</h4><p>如果$g &#x3D; (p,R) \in SE(3)$，那么$\bar{g}$的逆可以由矩阵的逆来进行确定</p>
+<p>$$<br>\bar{g}^{-1} &#x3D;<br>\begin{bmatrix}<br>R^T &amp; -R^Tp \<br>0 &amp; 1<br>\end{bmatrix}<br>$$</p>
+<h4 id="刚体变换的组合"><a href="#刚体变换的组合" class="headerlink" title="刚体变换的组合"></a>刚体变换的组合</h4><p>刚体变换的组合将构成新的刚体变换，若$g_{bc}\in SE(3)$表示坐标系C相对于坐标系B的位形，$g_{ab}$表示B系相对于A系的为形，那么通过齐次表示可以获得C系相对于A系的位形</p>
+<p>$$<br>\begin{align}<br>\bar{g}<em>{ac} &amp; &#x3D; \bar{g}</em>{ab} \bar{g}<em>{bc}	\<br>&amp; &#x3D;<br>\begin{bmatrix}<br>R</em>{ab} &amp; p_{ab} \<br>0 &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>R_{bc} &amp; p_{bc} \<br>0 &amp; 1<br>\end{bmatrix}	\<br>&amp; &#x3D;<br>\begin{bmatrix}<br>R_{ab}R_{bc} &amp; R_{ab}p_{bc} + p_{ab} \<br>0 &amp; 1<br>\end{bmatrix}<br>\end{align}<br>$$</p>
+<h4 id="计算刚体运动的例子"><a href="#计算刚体运动的例子" class="headerlink" title="计算刚体运动的例子"></a>计算刚体运动的例子</h4><p>考虑刚体绕平行于z轴且经过点$(0, l_1, 0)\in\mathcal{R}^3$的一条直线的旋转运动，如图所示，求刚体位形的齐次表示</p>
+<p><img src="https://pic.imgdb.cn/item/66d404b2d9c307b7e9135358.png" alt="img"></p>
+<p>由之前的例子可以知道，B系相对于A系的姿态矩阵为：</p>
+<p>$$<br>R_{ab} &#x3D;<br>\begin{bmatrix}<br>\cos\theta &amp; -\sin\theta &amp; 0 \<br>\sin\theta &amp; \cos\theta &amp; 0\<br>0 &amp; 0 &amp; 1<br>\end{bmatrix}<br>$$</p>
+<p>B系原点在A系中的坐标为</p>
+<p>$$<br>p_{ab} &#x3D;<br>\begin{bmatrix}<br>0	\<br>l_1 \<br>0<br>\end{bmatrix}<br>$$</p>
+<p>所以刚体位形的齐次表示矩阵为</p>
+<p>$$<br>\bar{g}<em>{ab}(\theta) &#x3D;<br>\begin{bmatrix}<br>R</em>{ab} &amp; p_{ab} \<br>0 &amp; 1<br>\end{bmatrix} &#x3D;<br>\left[<br>\begin{array}{ccc|c}<br>\cos\theta &amp; -\sin\theta &amp; 0 &amp; 0\<br>\sin\theta &amp; \cos\theta &amp; 0 &amp; l_1\<br>0 &amp; 0 &amp; 1 &amp; 0	\<br>\hline<br>0 &amp; 0 &amp; 0 &amp; 1<br>\end{array}<br>\right]<br>$$</p>
+<p>在本文以下的表述中，刚体运动$g$的齐次表示不再使用$\bar{g}$来加以区分。</p>
+<h4 id="刚体运动的指数坐标和运动旋量"><a href="#刚体运动的指数坐标和运动旋量" class="headerlink" title="刚体运动的指数坐标和运动旋量"></a>刚体运动的指数坐标和运动旋量</h4><p>定义：<strong>运动旋量</strong>（twist）$\xi&#x3D;[v, \omega]^T$，通常包含两个部分，分别是线速度$v$和角速度$\omega$。</p>
+<p>考虑一个单臂机器人的旋转例子，如下图所示：</p>
+<p><img src="https://pic.imgdb.cn/item/66d40367d9c307b7e910b891.png" alt="img"></p>
+<p>臂端点$p(t)$的线速度为：</p>
+<p>$$<br>\dot{p}(t) &#x3D; \omega \times (p(t) - q)<br>$$</p>
+<p>将上述式子写成齐次的形式</p>
+<p>$$<br>\begin{align}<br>    \begin{bmatrix}<br>    \dot{p}	\<br>    0<br>    \end{bmatrix} &amp; &#x3D;<br>    \begin{bmatrix}<br>    \hat{w} &amp; -\omega \times q \<br>    0 &amp; 0<br>    \end{bmatrix}<br>    \begin{bmatrix}<br>    p	\<br>    1<br>    \end{bmatrix}	\<br>    \begin{bmatrix}<br>    \dot{p}	\<br>    0<br>    \end{bmatrix} &amp; &#x3D; \hat{\xi} \begin{bmatrix}<br>    p	\<br>    1<br>    \end{bmatrix}<br>\end{align}<br>$$</p>
+<p>其中</p>
+<p>$$<br>\hat{\xi}&#x3D;\begin{bmatrix}<br>\hat{w} &amp; -\omega \times q \<br>0 &amp; 0<br>\end{bmatrix} ,v&#x3D;-\omega \times q<br>$$</p>
+<p>上述微分方程的解为：</p>
+<p>$$<br>\bar{p}(t) &#x3D; e^{\hat{\xi}t}\bar{p}(0)<br>$$</p>
+<p>其中$e^{\hat{\xi}t}\in R^{4\times 4}$被称为矩阵$\hat{\xi}t$的矩阵指数，可以展开为：</p>
+<p>$$<br>e^{\hat{\xi}t} &#x3D; I + \hat{\xi}t + \frac{(\hat{\xi}t)^2}{2!} + \frac{(\hat{\xi}t)^3}{3!}+\cdots<br>$$</p>
+<p>如果是单位旋转角速度，那么$t$可以完全由$\theta$进行代替。</p>
+<p>从这个例子我们可以得到旋量的意义和计算方式：</p>
+<p>$$<br>\xi &#x3D;<br>\begin{bmatrix}<br>v \<br>\omega<br>\end{bmatrix} &#x3D;<br>\begin{bmatrix}<br>-\omega \times q \<br> \omega<br>\end{bmatrix}	\<br>\hat{\xi} &#x3D;<br>\begin{bmatrix}<br>\hat{\omega} &amp; v \<br>0 &amp; 0<br>\end{bmatrix}<br>$$</p>
+<p>包含了一个绕轴$\omega$的旋转，和沿着$\omega$轴线的平移运动，如下图所示</p>
+<p><img src="https://pic.imgdb.cn/item/66d40581d9c307b7e9158672.png" alt="img"></p>
+<p>可以把这个运动想象成拧螺丝，如下图所示</p>
+<p><img src="https://pic.imgdb.cn/item/66d405fdd9c307b7e916daed.png" alt="img"></p>
+<p>矩阵指数$e^{\hat{\xi}\theta}$可以通过如下方式来进行计算</p>
+<p>$$<br>g &#x3D;e^{\hat{\xi}\theta} &#x3D;<br>\begin{bmatrix}<br>e^{\hat{\omega}\theta} &amp; (I-e^{\hat{\omega}\theta})(\omega\times v) + \omega \omega^T v\theta	\<br>0 &amp; 1<br>\end{bmatrix}<br>$$</p>
+<p>其中$e^{\hat{\omega}\theta} &#x3D; I + \hat{\omega}\sin \theta + \hat{\omega}^2(1-\cos \theta)$，这是$SE(3)$中的元素，它与前面的刚体变换不同，它描述的不是点在不同坐标系之间的变换，而是点由初始位置$p(0)\in\mathcal{R}^3$到$p(\theta)\in\mathcal{R}^3$经过了如下刚体运动的位置坐标之间的变换</p>
+<p>$$<br>p(\theta) &#x3D; e^{\hat{\xi}\theta} p(0)<br>$$</p>
+<p>上式子中，$p(0)$和$p(\theta)$均在同一参考系中。<font color=red>运动旋量的指数可以理解为描述刚体由起始位置到最终位形的变换</font>。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1]<a target="_blank" rel="noopener" href="https://d1.amobbs.com/bbs_upload782111/files_10/ourdev_267943.pdf">机器人操作的数学导论-MLS中文版</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://shenmuxin.github.io">Shen Mu Xin</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://shenmuxin.github.io/2024/04/02/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%8B%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8/">http://shenmuxin.github.io/2024/04/02/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%8B%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://shenmuxin.github.io" target="_blank">Shen Mu Xin's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6/">机器人学</a><a class="post-meta__tags" href="/tags/Robotics/">Robotics</a></div><div class="post_share"><div class="social-share" data-image="https://pic.imgdb.cn/item/66d40367d9c307b7e910b891.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/10/Ubuntu%E4%B8%AD%E5%A4%8D%E7%8E%B0Graspnet/" title="Ubuntu中复现Graspnet"><img class="cover" src="https://pic.imgdb.cn/item/66d2f85fd9c307b7e9439b4e.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Ubuntu中复现Graspnet</div></div></a></div><div class="next-post pull-right"><a href="/2024/03/31/C-STL%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/" title="C++ STL简明教程"><img class="cover" src="https://pic.imgdb.cn/item/66d2b0fbd9c307b7e9e55370.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">C++ STL简明教程</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Shen Mu Xin</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/shenmuxin" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_44940689?type=blog" target="_blank" title="Csdn"><i class="fa-solid fa-c" style="color: #24292e;"></i></a><a class="social-icon" href="https://github.com/shenmuxin" target="_blank" title="Resume"><i class="fa-solid fa-file" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">你的手表走一秒钟是多久</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E4%B9%8B%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8"><span class="toc-number">1.</span> <span class="toc-text">机器人学之刚体运动</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8"><span class="toc-number">1.1.</span> <span class="toc-text">1. 刚体运动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%88%9A%E4%BD%93%E5%8F%98%E6%8D%A2"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 刚体变换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9A%E4%BD%93"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">刚体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9A%E4%BD%93%E5%8F%98%E6%8D%A2"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">刚体变换</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%B8%89%E7%BB%B4%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%9A%84%E6%97%8B%E8%BD%AC%E8%BF%90%E5%8A%A8"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 三维空间中的旋转运动</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BE%A4"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">群</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B1%82%E8%B4%A8%E7%82%B9%E5%9D%90%E6%A0%87%E7%9A%84%E7%9B%B8%E5%AF%B9%E5%8F%98%E6%8D%A2"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">求质点坐标的相对变换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5%E7%9A%84%E5%90%88%E6%88%90%E6%B3%95%E5%88%99"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">旋转矩阵的合成法则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E7%BA%BF%E6%80%A7%E7%AE%97%E5%AD%90%E6%9D%A5%E8%AE%A1%E7%AE%97%E5%8F%89%E7%A7%AF"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">用线性算子来计算叉积</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%89%E7%A7%AF%E7%9A%84%E5%8F%B3%E6%89%8B%E6%B3%95%E5%88%99"><span class="toc-number">1.1.2.5.</span> <span class="toc-text">叉积的右手法则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%89%E7%A7%AF%E7%94%A8%E4%BA%8E%E8%AE%A1%E7%AE%97%E7%BA%BF%E9%80%9F%E5%BA%A6"><span class="toc-number">1.1.2.6.</span> <span class="toc-text">叉积用于计算线速度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC%E7%9A%84%E6%8C%87%E6%95%B0%E5%9D%90%E6%A0%87"><span class="toc-number">1.1.2.7.</span> <span class="toc-text">旋转的指数坐标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rodrigues%E5%85%AC%E5%BC%8F"><span class="toc-number">1.1.2.8.</span> <span class="toc-text">Rodrigues公式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-number">1.1.2.9.</span> <span class="toc-text">计算旋转矩阵的例子</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E5%85%83%E6%95%B0"><span class="toc-number">1.1.2.10.</span> <span class="toc-text">四元数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E4%B8%89%E7%BB%B4%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%9A%84%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 三维空间中的刚体运动</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%BD%90%E6%AC%A1%E5%9D%90%E6%A0%87%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">齐次坐标表示法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%BD%90%E6%AC%A1%E8%A1%A8%E7%A4%BA%E5%88%9A%E4%BD%93%E5%8F%98%E6%8D%A2%E7%9A%84%E9%80%86"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">齐次表示刚体变换的逆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9A%E4%BD%93%E5%8F%98%E6%8D%A2%E7%9A%84%E7%BB%84%E5%90%88"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">刚体变换的组合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-number">1.1.3.4.</span> <span class="toc-text">计算刚体运动的例子</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9A%E4%BD%93%E8%BF%90%E5%8A%A8%E7%9A%84%E6%8C%87%E6%95%B0%E5%9D%90%E6%A0%87%E5%92%8C%E8%BF%90%E5%8A%A8%E6%97%8B%E9%87%8F"><span class="toc-number">1.1.3.5.</span> <span class="toc-text">刚体运动的指数坐标和运动旋量</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">1.2.</span> <span class="toc-text">Reference</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/07/12/vscode%E9%85%8D%E7%BD%AElatex%E7%8E%AF%E5%A2%83%E5%88%B6%E4%BD%9Cbeamer/" title="vscode配置latex环境制作beamer"><img src="https://pic.imgdb.cn/item/66d3f9e3d9c307b7e907c347.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vscode配置latex环境制作beamer"/></a><div class="content"><a class="title" href="/2024/07/12/vscode%E9%85%8D%E7%BD%AElatex%E7%8E%AF%E5%A2%83%E5%88%B6%E4%BD%9Cbeamer/" title="vscode配置latex环境制作beamer">vscode配置latex环境制作beamer</a><time datetime="2024-07-12T01:22:15.000Z" title="发表于 2024-07-12 09:22:15">2024-07-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/11/vscode%E9%85%8D%E7%BD%AElatex%E7%8E%AF%E5%A2%83%E5%88%B6%E4%BD%9C%E7%AE%80%E5%8E%86/" title="vscode配置latex环境制作简历"><img src="https://pic.imgdb.cn/item/66d3f9e3d9c307b7e907c347.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vscode配置latex环境制作简历"/></a><div class="content"><a class="title" href="/2024/07/11/vscode%E9%85%8D%E7%BD%AElatex%E7%8E%AF%E5%A2%83%E5%88%B6%E4%BD%9C%E7%AE%80%E5%8E%86/" title="vscode配置latex环境制作简历">vscode配置latex环境制作简历</a><time datetime="2024-07-11T05:22:15.000Z" title="发表于 2024-07-11 13:22:15">2024-07-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/06/17/Ubuntu%E4%B8%AD%E5%A4%8D%E7%8E%B0Fundationpose/" title="Ubuntu中复现Fundationpose"><img src="https://pic.imgdb.cn/item/66d3fbc5d9c307b7e90971f6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu中复现Fundationpose"/></a><div class="content"><a class="title" href="/2024/06/17/Ubuntu%E4%B8%AD%E5%A4%8D%E7%8E%B0Fundationpose/" title="Ubuntu中复现Fundationpose">Ubuntu中复现Fundationpose</a><time datetime="2024-06-17T02:22:15.000Z" title="发表于 2024-06-17 10:22:15">2024-06-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/24/step%E6%88%96stl%E6%96%87%E4%BB%B6%E8%BD%ACurdf%E5%B9%B6%E6%B7%BB%E5%8A%A0%E5%88%B0%E6%9C%BA%E6%A2%B0%E8%87%82%E4%B8%8A/" title="step或stl文件转urdf并添加到机械臂上"><img src="https://pic.imgdb.cn/item/66d2f659d9c307b7e940b43f.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="step或stl文件转urdf并添加到机械臂上"/></a><div class="content"><a class="title" href="/2024/05/24/step%E6%88%96stl%E6%96%87%E4%BB%B6%E8%BD%ACurdf%E5%B9%B6%E6%B7%BB%E5%8A%A0%E5%88%B0%E6%9C%BA%E6%A2%B0%E8%87%82%E4%B8%8A/" title="step或stl文件转urdf并添加到机械臂上">step或stl文件转urdf并添加到机械臂上</a><time datetime="2024-05-24T06:44:15.000Z" title="发表于 2024-05-24 14:44:15">2024-05-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/21/Graspnet-Astra2%E7%9B%B8%E6%9C%BA%E5%AE%9E%E7%8E%B0%E9%83%A8%E7%BD%B2/" title="Graspnet+Astra2相机实现部署"><img src="https://pic.imgdb.cn/item/66d2f4e6d9c307b7e93f943b.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Graspnet+Astra2相机实现部署"/></a><div class="content"><a class="title" href="/2024/05/21/Graspnet-Astra2%E7%9B%B8%E6%9C%BA%E5%AE%9E%E7%8E%B0%E9%83%A8%E7%BD%B2/" title="Graspnet+Astra2相机实现部署">Graspnet+Astra2相机实现部署</a><time datetime="2024-05-21T01:44:15.000Z" title="发表于 2024-05-21 09:44:15">2024-05-21</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Shen Mu Xin</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: 'bb96298695bae7b9b1b6',
+      clientSecret: 'e5bb4ac1d3493a60b1e9886eca7f020fe3ed6a46',
+      repo: 'shenmuxin.github.io',
+      owner: 'shenmuxin',
+      admin: ['shenmuxin'],
+      id: '16cd24e8c8f9fd6b814c918aa884bdd5',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
