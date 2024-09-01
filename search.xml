@@ -4,6 +4,56 @@
   
     
     <entry>
+      <title>vscode配置latex环境制作beamer</title>
+      <link href="/2024/07/12/vscode%E9%85%8D%E7%BD%AElatex%E7%8E%AF%E5%A2%83%E5%88%B6%E4%BD%9Cbeamer/"/>
+      <url>/2024/07/12/vscode%E9%85%8D%E7%BD%AElatex%E7%8E%AF%E5%A2%83%E5%88%B6%E4%BD%9Cbeamer/</url>
+      
+        <content type="html"><![CDATA[<h1 id="vscode配置latex环境制作beamer-ppt"><a href="#vscode配置latex环境制作beamer-ppt" class="headerlink" title="vscode配置latex环境制作beamer ppt"></a>vscode配置latex环境制作beamer ppt</h1><p>写在前面，笔者之前一直使用<code>overleaf</code>来制作<code>beamer</code>ppt，但是免费版本会限制编译时间上限，故在本地配置了<code>latex</code>环境用于制作<code>beamer</code>ppt。</p><p>环境配置</p><ul><li>系统环境windows11</li><li>vscode + Tex Live</li></ul><h2 id="1-安装Tex-Live"><a href="#1-安装Tex-Live" class="headerlink" title="1. 安装Tex Live"></a>1. 安装Tex Live</h2><p>首先需要下载<a href="https://www.tug.org/texlive/acquire-iso.html">Tex Live</a>，我们不要使用在线安装（这样非常慢），通过<code>CTAN</code>镜像下载<code>.iso</code>镜像文件，然后装载镜像文件来进行安装。</p><p><img src="https://pic.imgdb.cn/item/66d3fa99d9c307b7e90859b9.png" alt="img"></p><p>然后选择最新的镜像下载即可</p><p><img src="https://pic.imgdb.cn/item/66d3faacd9c307b7e908692f.png" alt="img"></p><p>下载完毕后，装载镜像，然后运行<code>install-tl-windows.bat</code>即可，安装可能会花费一段时间。</p><p><img src="https://pic.imgdb.cn/item/66d3facdd9c307b7e90889c2.png" alt="img"></p><h2 id="2-安装vscode插件"><a href="#2-安装vscode插件" class="headerlink" title="2. 安装vscode插件"></a>2. 安装vscode插件</h2><p>安装插件<code>LaTex Workshop</code>，直接在<code>vscode</code>中搜索<code>LaTex Workshop</code>，然后安装插件并重启<code>vscode</code>即可</p><p><img src="https://pic.imgdb.cn/item/66d3fae6d9c307b7e9089d3c.png" alt="img"></p><h2 id="3-测试"><a href="#3-测试" class="headerlink" title="3. 测试"></a>3. 测试</h2><p>你可以找到一个你喜欢的<code>beamer</code>主题，<a href="https://mpetroff.net/files/beamer-theme-matrix/">https://mpetroff.net/files/beamer-theme-matrix/</a>，然后可以开始使用了</p><p><img src="https://pic.imgdb.cn/item/66d3fafcd9c307b7e908b4f0.png" alt="img"></p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1]<a href="https://blog.csdn.net/houor/article/details/125966265">在Windows上安装TeXLive</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Latex </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Latex </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>vscode配置latex环境制作简历</title>
+      <link href="/2024/07/11/vscode%E9%85%8D%E7%BD%AElatex%E7%8E%AF%E5%A2%83%E5%88%B6%E4%BD%9C%E7%AE%80%E5%8E%86/"/>
+      <url>/2024/07/11/vscode%E9%85%8D%E7%BD%AElatex%E7%8E%AF%E5%A2%83%E5%88%B6%E4%BD%9C%E7%AE%80%E5%8E%86/</url>
+      
+        <content type="html"><![CDATA[<h1 id="vscode配置latex环境制作简历"><a href="#vscode配置latex环境制作简历" class="headerlink" title="vscode配置latex环境制作简历"></a>vscode配置latex环境制作简历</h1><h2 id="1-安装Tex-Live及vscode插件"><a href="#1-安装Tex-Live及vscode插件" class="headerlink" title="1. 安装Tex Live及vscode插件"></a>1. 安装Tex Live及vscode插件</h2><p>可以参考：<a href="https://blog.csdn.net/qq_44940689/article/details/140244933?spm=1001.2014.3001.5502">vscode配置latex环境制作beamer ppt</a></p><h2 id="2-添加vscode配置文件"><a href="#2-添加vscode配置文件" class="headerlink" title="2. 添加vscode配置文件"></a>2. 添加vscode配置文件</h2><p>打开<code>vscode</code>，按下<code>Ctrl + Shift + P</code>打开搜索框，搜索<code>Preference: Open User Settings (JSON)</code></p><p><img src="https://pic.imgdb.cn/item/66d3f984d9c307b7e90773b0.png" alt="img"></p><p>然后添加以下的配置文件：</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;latex-workshop.latex.tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">     <span class="punctuation">&#123;</span></span><br><span class="line">         <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;latexmk&quot;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="string">&quot;latexmk&quot;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">             <span class="string">&quot;-xelatex&quot;</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">&quot;-synctex=1&quot;</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">&quot;-interaction=nonstopmode&quot;</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">&quot;-file-line-error&quot;</span><span class="punctuation">,</span></span><br><span class="line">             <span class="string">&quot;%DOC%&quot;</span></span><br><span class="line">         <span class="punctuation">]</span></span><br><span class="line">     <span class="punctuation">&#125;</span></span><br><span class="line"> <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;latex-workshop.latex.recipes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">     <span class="punctuation">&#123;</span></span><br><span class="line">         <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;latexmk (xelatex)&quot;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">             <span class="string">&quot;latexmk&quot;</span></span><br><span class="line">         <span class="punctuation">]</span></span><br><span class="line">     <span class="punctuation">&#125;</span></span><br><span class="line"> <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;latex-workshop.latex.autoBuild.run&quot;</span><span class="punctuation">:</span> <span class="string">&quot;onFileChange&quot;</span><span class="punctuation">,</span></span><br><span class="line"> <span class="attr">&quot;latex-workshop.view.pdf.viewer&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tab&quot;</span></span><br></pre></td></tr></table></figure><p>这样就配置好了，然后我们可以进行一下测试</p><h2 id="3-测试"><a href="#3-测试" class="headerlink" title="3. 测试"></a>3. 测试</h2><p>在<code>overleaf</code>：<a href="https://www.overleaf.com/latex/templates/tagged/cv">Templates — Résumé &#x2F; CV</a>下载你所感兴趣的简历模板，然后直接编译，出现的效果如下：</p><p><img src="https://pic.imgdb.cn/item/66d3f999d9c307b7e90782fd.png" alt="img"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Latex </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Latex </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>step或stl文件转urdf并添加到机械臂上</title>
       <link href="/2024/05/24/step%E6%88%96stl%E6%96%87%E4%BB%B6%E8%BD%ACurdf%E5%B9%B6%E6%B7%BB%E5%8A%A0%E5%88%B0%E6%9C%BA%E6%A2%B0%E8%87%82%E4%B8%8A/"/>
       <url>/2024/05/24/step%E6%88%96stl%E6%96%87%E4%BB%B6%E8%BD%ACurdf%E5%B9%B6%E6%B7%BB%E5%8A%A0%E5%88%B0%E6%9C%BA%E6%A2%B0%E8%87%82%E4%B8%8A/</url>
